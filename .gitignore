@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.vercel/
+*.log
+
+# Your private settings
+career.config.local.js
+.env*.local
