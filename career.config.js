@@ -172,8 +172,34 @@ Thanks,
 {name}`,
   },
 
-  // Days after applying before a follow-up reminder appears.
+  // Days after applying (or sending a DM) before a follow-up reminder appears.
   followUpDays: 7,
+
+  // Startups to cold DM: YC companies that are hiring, ranked by how likely
+  // they are to need you. Set enabled to false to hide the Startups tab.
+  //   maxTeamSize: skip bigger companies (they usually hire through job posts)
+  //   industries:  YC industries that get a boost
+  //   keywords:    words in a startup's pitch or tags that get a boost
+  //   dm / dmFollowUp: messages. They fill in {company}, {oneLiner}, {name}
+  //                and {portfolio}.
+  outreach: {
+    enabled: true,
+    maxTeamSize: 50,
+    industries: ["Consumer", "Education", "Fintech"],
+    keywords: ["consumer", "mobile", "app", "marketplace", "community", "creator", "social", "education", "learning", "brand", "design", "e-commerce", "ecommerce"],
+    dm: `Hi! I came across {company} ({oneLiner}) and really like what you're building.
+
+I'm {name}, a product and brand designer. Early teams often need someone who can own the product UI, the brand and the launch visuals, and that's what I do. [Add one line about a recent project.]
+
+My work: {portfolio}
+
+Would you be open to a quick chat about how I could help {company}? I'm happy to start with a small paid trial.
+
+{name}`,
+    dmFollowUp: `Hi again! Just bumping this in case it got buried. I'd still love to help {company} with design. My work: {portfolio}
+
+{name}`,
+  },
 };
 
 export default config;

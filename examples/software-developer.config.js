@@ -108,6 +108,25 @@ Thanks,
   },
 
   followUpDays: 7,
+
+  outreach: {
+    enabled: true,
+    maxTeamSize: 50,
+    industries: ["B2B", "Fintech", "Consumer"],
+    keywords: ["api", "platform", "mobile", "app", "developer", "saas", "ai", "marketplace"],
+    dm: `Hi! I came across {company} ({oneLiner}) and really like what you're building.
+
+I'm {name}, a developer who ships product features end to end. [Add one line about a recent project.]
+
+My work: {portfolio}
+
+Would you be open to a quick chat about how I could help {company}? I'm happy to start with a small paid trial.
+
+{name}`,
+    dmFollowUp: `Hi again! Just bumping this in case it got buried. I'd still love to help {company} ship. My work: {portfolio}
+
+{name}`,
+  },
 };
 
 export default config;

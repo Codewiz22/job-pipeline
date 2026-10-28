@@ -12,6 +12,9 @@ import { DAY, FOLLOW_UP_DAYS, followUpDue, timeAgo } from "../lib/format";
 import JobCard from "../components/JobCard";
 import JobPanel from "../components/JobPanel";
 import SettingsPanel from "../components/SettingsPanel";
+import StartupsView from "../components/StartupsView";
+
+const OUTREACH_ON = Boolean(config.outreach?.enabled);
 
 const TABS = [
   { key: "matches", label: "Matches" },
@@ -38,6 +41,9 @@ export default function Dashboard() {
   const [pipeline, setPipeline] = useStored("djp.pipeline.v1", {});
   const [kit, setKit] = useStored("djp.kit.v1", DEFAULT_KIT, reviveKit);
   const [seen, setSeen, seenReady] = useStored("djp.seen.v1", {});
+  const [outreach, setOutreach] = useStored("djp.outreach.v1", {});
+  const [storedView, setView] = useStored("djp.view.v1", "jobs");
+  const view = OUTREACH_ON ? storedView : "jobs";
 
   const [tab, setTab] = useState("matches");
   const [query, setQuery] = useState("");
@@ -172,13 +178,28 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="top-actions">
-          <span className="updated">{feed ? `Feed updated ${timeAgo(feed.fetchedAt, now)}` : loading ? "Loading jobs…" : ""}</span>
-          <button type="button" className="btn" onClick={load} disabled={loading}>{loading ? "Refreshing…" : "Refresh"}</button>
+          {view === "jobs" && (
+            <>
+              <span className="updated">{feed ? `Feed updated ${timeAgo(feed.fetchedAt, now)}` : loading ? "Loading jobs…" : ""}</span>
+              <button type="button" className="btn" onClick={load} disabled={loading}>{loading ? "Refreshing…" : "Refresh"}</button>
+            </>
+          )}
           <button type="button" className="btn" onClick={() => setSettingsOpen(true)}>Settings</button>
           {signedIn && <button type="button" className="btn btn-ghost" onClick={logOut}>Log out</button>}
         </div>
       </header>
 
+      {OUTREACH_ON && (
+        <nav className="views segmented" aria-label="Sections">
+          <button type="button" className={view === "jobs" ? "on" : ""} onClick={() => setView("jobs")}>Jobs</button>
+          <button type="button" className={view === "startups" ? "on" : ""} onClick={() => setView("startups")}>Startups to DM</button>
+        </nav>
+      )}
+
+      {view === "startups" ? (
+        <StartupsView kit={kit} outreach={outreach} setOutreach={setOutreach} onOpenSettings={() => setSettingsOpen(true)} />
+      ) : (
+      <>
       <section className="stats" aria-label="Summary">
         <Stat label="Strong matches" value={stats.strong} hint="score 70+ you can apply to" onClick={() => { setTab("matches"); setMinScore(70); }} />
         <Stat label="New today" value={stats.fresh} hint="first seen in the last 24h" onClick={() => setTab("matches")} />
@@ -250,6 +271,8 @@ export default function Dashboard() {
           . Your pipeline is saved in this browser; export a backup from Settings.
         </p>
       </footer>
+      </>
+      )}
 
       {openJob && (
         <JobPanel
@@ -266,7 +289,7 @@ export default function Dashboard() {
         />
       )}
       {settingsOpen && (
-        <SettingsPanel kit={kit} setKit={setKit} pipeline={pipeline} setPipeline={setPipeline} onClose={() => setSettingsOpen(false)} />
+        <SettingsPanel kit={kit} setKit={setKit} pipeline={pipeline} setPipeline={setPipeline} outreach={outreach} setOutreach={setOutreach} onClose={() => setSettingsOpen(false)} />
       )}
     </div>
   );

@@ -5,6 +5,7 @@
 import { useRef, useState } from "react";
 import { PROFILES, PROFILE_KEYS } from "../lib/profiles";
 import { DEFAULT_KIT, reviveKit } from "../lib/kit";
+import config from "../lib/config";
 import { Modal } from "./ui";
 
 const FIELDS = [
@@ -20,7 +21,7 @@ const FIELDS = [
   ["availability", "Availability", true],
 ];
 
-export default function SettingsPanel({ kit, setKit, pipeline, setPipeline, onClose }) {
+export default function SettingsPanel({ kit, setKit, pipeline, setPipeline, outreach, setOutreach, onClose }) {
   const fileRef = useRef(null);
   const [message, setMessage] = useState("");
 
@@ -28,7 +29,7 @@ export default function SettingsPanel({ kit, setKit, pipeline, setPipeline, onCl
   const setPitch = (key, value) => setKit((k) => ({ ...k, pitches: { ...k.pitches, [key]: value } }));
 
   function exportBackup() {
-    const blob = new Blob([JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), kit, pipeline }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), kit, pipeline, outreach }, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `job-pipeline-backup-${new Date().toISOString().slice(0, 10)}.json`;
@@ -44,7 +45,8 @@ export default function SettingsPanel({ kit, setKit, pipeline, setPipeline, onCl
       const data = JSON.parse(await file.text());
       if (data.pipeline && typeof data.pipeline === "object") setPipeline(data.pipeline);
       if (data.kit && typeof data.kit === "object") setKit(reviveKit(data.kit));
-      setMessage(`Restored ${Object.keys(data.pipeline || {}).length} pipeline jobs from ${file.name}.`);
+      if (data.outreach && typeof data.outreach === "object") setOutreach(data.outreach);
+      setMessage(`Restored ${Object.keys(data.pipeline || {}).length} jobs and ${Object.keys(data.outreach || {}).length} startups from ${file.name}.`);
     } catch {
       setMessage("That file isn't a backup from this app.");
     }
@@ -87,6 +89,21 @@ export default function SettingsPanel({ kit, setKit, pipeline, setPipeline, onCl
             <textarea rows={6} value={kit.followUp} onChange={(e) => set("followUp", e.target.value)} />
           </label>
         </section>
+
+        {config.outreach?.enabled && (
+          <section>
+            <h4>Cold DMs to startups</h4>
+            <p className="muted">Use {"{company}"}, {"{oneLiner}"}, {"{name}"} and {"{portfolio}"}. Keep it short: founders read DMs on their phones.</p>
+            <label className="block">
+              <span>First message</span>
+              <textarea rows={9} value={kit.dm} onChange={(e) => set("dm", e.target.value)} />
+            </label>
+            <label className="block">
+              <span>Follow-up</span>
+              <textarea rows={4} value={kit.dmFollowUp} onChange={(e) => set("dmFollowUp", e.target.value)} />
+            </label>
+          </section>
+        )}
 
         <section>
           <h4>Backup</h4>

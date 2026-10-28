@@ -18,6 +18,9 @@ one file, `career.config.js`.
   after you apply.
 - **Apply kit**: a cover note for each of your profiles, filled in with the
   company and job title, plus your details with copy buttons.
+- **Startups to DM**: hiring Y Combinator startups ranked by how likely they
+  are to need you (small team, recent batch, remote, your industries), with
+  links to find the founders, a cold DM ready to copy, and follow-up tracking.
 - **Backup**: export or import your whole pipeline as a JSON file.
 
 ## Quick start
@@ -46,7 +49,8 @@ Everything career-specific is in [`career.config.js`](career.config.js):
 | `home` | Where you live. Jobs naming it get a boost; jobs naming only other places are hidden by default. |
 | `sources` | What to search for on each job board. Use `[]` to switch a board off. |
 | `kit` | Default details for the Apply kit. |
-| `followUpDays` | Days after applying before the follow-up reminder appears. |
+| `followUpDays` | Days after applying or sending a DM before the follow-up reminder appears. |
+| `outreach` | The Startups tab: team size limit, industries and keywords to favour, and your cold DM and follow-up. Set `enabled: false` to hide it. |
 
 For a different field, start from
 [`examples/software-developer.config.js`](examples/software-developer.config.js).
@@ -98,6 +102,24 @@ nothing is hidden.
 Responses are cached for an hour (six for Remote OK and Remotive), and every
 job links back to its board, as the boards ask. Remotive's free API currently
 ignores filters and returns only its latest few jobs.
+
+## Startups to DM
+
+The Startups tab lists active, hiring companies from the open
+[Y Combinator directory](https://yc-oss.github.io/api/) (refreshed every six
+hours), scored 0-100:
+
+| Part | Points |
+| --- | --- |
+| Team size | +25 up to 10 people, +18 up to 25, +10 up to `maxTeamSize` |
+| YC batch | +20 this year or last, +12 two years ago, +6 three |
+| Location | +20 names your home region, +12 hires remotely |
+| Industry in `outreach.industries` | +10 |
+| `outreach.keywords` in the pitch or tags | 5 each, up to 20 |
+
+Each startup links to its YC profile (which names the founders), a LinkedIn
+and X search, and its website. The app never sends messages for you: copy the
+DM, send it yourself, then click **Mark DM sent**.
 
 ## Deploy
 

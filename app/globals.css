@@ -242,6 +242,16 @@ textarea { width: 100%; resize: vertical; font-size: 13.5px; line-height: 1.55; 
 .span-2 { grid-column: span 2; }
 .row-gap { display: flex; gap: 8px; flex-wrap: wrap; }
 
+/* ---------- startups ---------- */
+.views { max-width: 340px; margin-top: 22px; }
+.views + .stats { margin-top: 16px; }
+.stats-5 { grid-template-columns: repeat(5, 1fr); }
+.links { list-style: none; padding: 0; margin: 10px 0 0; font-size: 14px; }
+.links li { padding: 6px 0; border-top: 1px solid var(--border); }
+.links li:first-child { border-top: 0; }
+.spaced { margin-top: 20px; }
+.tip { font-size: 13px; margin: 0; }
+
 /* ---------- login ---------- */
 .login { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
 .login-card {
@@ -262,12 +272,12 @@ textarea { width: 100%; resize: vertical; font-size: 13.5px; line-height: 1.55; 
 
 /* ---------- responsive ---------- */
 @media (max-width: 960px) {
-  .stats { grid-template-columns: repeat(3, 1fr); }
+  .stats, .stats-5 { grid-template-columns: repeat(3, 1fr); }
   .panel-body { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .shell { padding: 20px 16px 40px; }
-  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stats, .stats-5 { grid-template-columns: repeat(2, 1fr); }
   .card { flex-wrap: wrap; }
   .card-main { flex-basis: calc(100% - 60px); }
   .card-side { flex-direction: row-reverse; justify-content: space-between; align-items: center; width: 100%; }
